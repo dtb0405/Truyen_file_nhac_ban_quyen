@@ -1,4 +1,4 @@
-# 🎵 Hệ Thống Mã Hóa File Nhạc Bảo Mật
+[# 🎵 Hệ Thống Mã Hóa File Nhạc Bảo Mật
 
 ## 📋 Mô tả
 
@@ -444,4 +444,4 @@ Dự án này được phát triển cho mục đích học tập và nghiên c�
 ✅ **Debug system**: Kiểm soát debug output  
 ✅ **Error handling**: Xử lý lỗi tốt  
 ✅ **Code cleanup**: Loại bỏ file thừa, tối ưu cấu trúc  
-✅ **Production ready**: Sẵn sàng deploy
+✅ **Production ready**: Sẵn sàng deploy](https://github.com/dtb0405/Truyen_file_nhac_ban_quyen)
