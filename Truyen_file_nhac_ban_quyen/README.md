@@ -224,7 +224,11 @@ Client sẽ chạy tại `http://localhost:5001`
 - **Sinh key thủ công**: Nhấn "Generate New Keys"
 - **Xóa lịch sử**: Nhấn "Clear Key History"
 - **Refresh server key**: Nhấn "Refresh Server Key"
-
+## Demo Hệ Thống
+https://github.com/nhinhnhinh/Antoanthongtin/blob/main/Screenshot%202025-06-30%20145930.png
+https://github.com/nhinhnhinh/Antoanthongtin/blob/main/Screenshot%202025-06-30%20150539.png
+https://github.com/nhinhnhinh/Antoanthongtin/blob/main/Screenshot%202025-06-30%20150606.png
+https://github.com/nhinhnhinh/Antoanthongtin/blob/main/z6757111032091_c07896cf8d08a78fba87e5878f759dd8.jpg
 ## ⚙️ Cấu hình
 
 File `config.py` chứa tất cả cấu hình (TỐI ƯU HÓA):
