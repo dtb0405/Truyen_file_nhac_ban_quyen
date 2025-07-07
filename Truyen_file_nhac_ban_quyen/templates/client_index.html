@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client - Gửi File Bản Quyền</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      font-weight: 300;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 1.1em;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid #e9ecef;
+    }
+
+    .section h3 {
+      color: #495057;
+      margin-bottom: 20px;
+      font-size: 1.3em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #495057;
+      font-weight: 500;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .input-field {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    input[type="text"], input[type="file"] {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    input[type="text"]:focus, input[type="file"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-info {
+      background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+      color: white;
+    }
+
+    .btn-info:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(23, 162, 184, 0.3);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(220, 53, 69, 0.3);
+    }
+
+    .status {
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 10px;
+      font-weight: 500;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .status.connected {
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status.disconnected {
+      background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .status.loading {
+      background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    .file-list {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid #e9ecef;
+    }
+
+    .file-list h3 {
+      color: #495057;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+
+    .file-list ul {
+      list-style: none;
+    }
+
+    .file-list li {
+      padding: 10px 15px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      border-left: 4px solid;
+      background: #f8f9fa;
+      transition: all 0.3s ease;
+    }
+
+    .file-list li:hover {
+      transform: translateX(5px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .file-list li.approved {
+      border-left-color: #28a745;
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      color: #155724;
+    }
+
+    .file-list li.pending {
+      border-left-color: #ffc107;
+      background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+      color: #856404;
+    }
+
+    .file-list li.empty {
+      border-left-color: #6c757d;
+      background: #f8f9fa;
+      color: #6c757d;
+      font-style: italic;
+    }
+
+    .refresh-info {
+      background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #28a745;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    .tip {
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      border: 1px solid #90caf9;
+      color: #1565c0;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 10px;
+        border-radius: 15px;
+      }
+      
+      .content {
+        padding: 20px;
+      }
+      
+      .input-group {
+        flex-direction: column;
+      }
+      
+      .input-field {
+        min-width: auto;
+      }
+    }
+
+    .toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      min-width: 260px;
+      max-width: 350px;
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: #fff;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 1.05em;
+      font-weight: 500;
+      box-shadow: 0 8px 32px rgba(40,167,69,0.18);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      pointer-events: none;
+      animation: toastIn 0.4s forwards;
+    }
+    .toast.error {
+      background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+    }
+    .toast.info {
+      background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+    }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    }
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-30px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1><i class="fas fa-music"></i> Music Upload Client</h1>
+      <p>Gửi file nhạc bản quyền lên server</p>
+    </div>
+
+    <div class="content">
+      <!-- Kết nối Section -->
+      <div class="section">
+        <h3><i class="fas fa-plug"></i> Kết nối Server</h3>
+        <div class="form-group">
+          <label for="clientName"><i class="fas fa-user"></i> Tên Client:</label>
+          <input type="text" id="clientName" placeholder="Nhập tên của bạn">
+        </div>
+        <div class="form-group">
+          <label for="serverURL"><i class="fas fa-server"></i> Địa chỉ Server:</label>
+          <input type="text" id="serverURL" placeholder="192.168.2.80:5000 hoặc http://192.168.2.80:5000">
+        </div>
+        <div class="input-group">
+          <button class="btn btn-primary" onclick="connect()">
+            <i class="fas fa-link"></i> Kết nối
+          </button>
+          <button class="btn btn-info" onclick="checkConnection()">
+            <i class="fas fa-sync-alt"></i> Kiểm tra kết nối
+          </button>
+          <button class="btn btn-danger" onclick="disconnect()">
+            <i class="fas fa-unlink"></i> Ngắt kết nối
+          </button>
+        </div>
+        <div class="tip">
+          <i class="fas fa-lightbulb"></i>
+          <strong>Tip:</strong> Bạn có thể nhập IP:port hoặc http://IP:port
+        </div>
+      </div>
+
+      <!-- Upload Section -->
+      <div class="section">
+        <h3><i class="fas fa-cloud-upload-alt"></i> Tải lên File</h3>
+        <div class="form-group">
+          <label><i class="fas fa-file-audio"></i> Chọn file MP3:</label>
+          <input type="file" id="fileInput" accept=".mp3">
+        </div>
+        <button class="btn btn-success" onclick="upload()">
+          <i class="fas fa-paper-plane"></i> Tải lên
+        </button>
+      </div>
+
+      <!-- Status Section -->
+      <div id="status" class="status disconnected">
+        <i class="fas fa-info-circle"></i> Chưa kết nối đến server
+      </div>
+
+      <!-- File List Section -->
+      <div class="section">
+        <h3><i class="fas fa-folder-open"></i> Danh sách File</h3>
+        <div class="file-list" id="fileList">
+          <p style="text-align: center; color: #6c757d; font-style: italic;">
+            <i class="fas fa-inbox"></i> Chưa có file nào được gửi
+          </p>
+        </div>
+      </div>
+
+      <!-- Key Management Section -->
+      <div class="section">
+        <h3><i class="fas fa-key"></i> Quản lý Key RSA</h3>
+        <div class="form-group">
+          <p style="color: #495057; margin-bottom: 15px;">
+            <i class="fas fa-info-circle"></i> 
+            <strong>Lưu ý:</strong> Key RSA sẽ được tự động sinh mới mỗi khi kết nối thành công với server để đảm bảo tính bảo mật.
+          </p>
+        </div>
+        <div class="input-group">
+          <button class="btn btn-info" onclick="generateKeysManually()">
+            <i class="fas fa-key"></i> Sinh Key Mới
+          </button>
+          <button class="btn btn-info" onclick="refreshServerKey()">
+            <i class="fas fa-sync"></i> Refresh Server Key
+          </button>
+          <button class="btn btn-info" onclick="viewKeyHistory()">
+            <i class="fas fa-history"></i> Xem Lịch Sử
+          </button>
+          <button class="btn btn-danger" onclick="clearKeyHistory()">
+            <i class="fas fa-trash"></i> Xóa Lịch Sử
+          </button>
+        </div>
+        <div id="keyHistory" style="display: none; margin-top: 20px;">
+          <div class="file-list">
+            <h4 style="color: #495057; margin-bottom: 15px;">
+              <i class="fas fa-clock"></i> Lịch sử sinh key:
+            </h4>
+            <div id="keyHistoryContent">
+              <!-- Nội dung lịch sử sẽ được load ở đây -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Refresh Info -->
+      <div class="refresh-info">
+        <span class="status-indicator"></span>
+        <span>Tự động cập nhật trạng thái file mỗi 3 giây</span>
+        <span style="margin-left: auto;">Lần cập nhật cuối: <span id="lastUpdate">Đang tải...</span></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let refreshInterval;
+    let previousFileState = {};
+    let isFirstLoad = true;
+    
+    function updateLastUpdateTime() {
+      const now = new Date();
+      document.getElementById('lastUpdate').textContent = now.toLocaleTimeString('vi-VN');
+    }
+
+    function updateStatus(message, type = 'disconnected') {
+      const statusEl = document.getElementById('status');
+      if (!message) {
+        statusEl.style.display = 'none';
+        return;
+      }
+      statusEl.style.display = '';
+      statusEl.className = `status ${type}`;
+      statusEl.innerHTML = `<i class="fas fa-${type === 'connected' ? 'check-circle' : type === 'loading' ? 'spinner fa-spin' : 'info-circle'}"></i> ${message}`;
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = 'toast ' + (type || 'success');
+      let icon = '<i class="fas fa-check-circle"></i>';
+      if (type === 'error') icon = '<i class="fas fa-times-circle"></i>';
+      if (type === 'info') icon = '<i class="fas fa-info-circle"></i>';
+      toast.innerHTML = icon + '<span>' + message + '</span>';
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.style.animation = 'toastOut 0.4s forwards'; }, 2600);
+      setTimeout(() => { document.body.removeChild(toast); }, 3000);
+    }
+
+    function checkFileStatusChanges(currentData) {
+      const currentState = {
+        approved: currentData.files || [],
+        pending: currentData.pending_files || []
+      };
+      if (!isFirstLoad) {
+        currentState.approved.forEach(file => {
+          if (!previousFileState.approved || !previousFileState.approved.includes(file)) {
+            setTimeout(() => {
+              showToast(`🎉 File "${file}" đã được duyệt thành công!`, 'success');
+            }, 100);
+          }
+        });
+        if (previousFileState.pending) {
+          previousFileState.pending.forEach(file => {
+            if (!currentState.pending.includes(file) && !currentState.approved.includes(file)) {
+              setTimeout(() => {
+                showToast(`❌ File "${file}" đã bị từ chối!`, 'error');
+              }, 100);
+            }
+          });
+        }
+      }
+      previousFileState = currentState;
+      isFirstLoad = false;
+    }
+
+    function connect() {
+      const url = document.getElementById('serverURL').value;
+      const name = document.getElementById('clientName').value;
+      
+      if (!name.trim()) {
+        showToast('❌ Vui lòng nhập tên client', 'error');
+        return;
+      }
+      
+      if (!url.trim()) {
+        showToast('❌ Vui lòng nhập địa chỉ server', 'error');
+        return;
+      }
+      
+      updateStatus('🔄 Đang kết nối...', 'loading');
+      
+      fetch('/update-server', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ server_url: url, clientName: name })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'connected') {
+          updateStatus(`✅ Đã kết nối đến ${data.server_ip}`, 'connected');
+          setTimeout(() => {
+            let message = `🎉 Kết nối thành công!\n\nTên client: ${name}\nServer: ${data.server_ip}\n\nBây giờ bạn có thể gửi file MP3 lên server.`;
+            if (data.message) {
+              message += `\n\n${data.message}`;
+            }
+            showToast(message);
+          }, 500);
+          startAutoRefresh();
+          loadFiles();
+        } else {
+          updateStatus(`❌ Kết nối thất bại: ${data.message || 'Lỗi không xác định'}`, 'disconnected');
+        }
+      })
+      .catch(error => {
+        updateStatus(`❌ Lỗi kết nối: ${error.message}`, 'disconnected');
+      });
+      isFirstLoad = true;
+    }
+
+    function upload() {
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) {
+        showToast('❌ Chọn một file .mp3', 'error');
+        return;
+      }
+      const formData = new FormData();
+      formData.append("file", file);
+      updateStatus('📤 Đang tải lên file...', 'loading');
+      fetch('/upload', { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'pending') {
+            showToast(`📤 File "${data.filename}" đã được gửi thành công!`, 'success');
+            loadFiles();
+            updateStatus('', 'disconnected');
+          } else {
+            updateStatus('❌ Upload thất bại', 'disconnected');
+            showToast('❌ Upload thất bại', 'error');
+          }
+        })
+        .catch(error => {
+          updateStatus('❌ Lỗi upload', 'disconnected');
+          showToast('❌ Lỗi upload: ' + error.message, 'error');
+        });
+    }
+
+    function loadFiles() {
+      fetch('/files')
+        .then(res => res.json())
+        .then(data => {
+          checkFileStatusChanges(data);
+          
+          let html = '';
+          
+          if (data.files && data.files.length > 0) {
+            html += '<h4 style="color: #28a745; margin-bottom: 10px;"><i class="fas fa-check-circle"></i> File đã được duyệt:</h4>';
+            data.files.forEach(file => {
+              html += `<li class="approved"><i class="fas fa-check"></i> ${file}</li>`;
+            });
+          }
+          
+          if (data.pending_files && data.pending_files.length > 0) {
+            html += '<h4 style="color: #ffc107; margin: 15px 0 10px 0;"><i class="fas fa-clock"></i> File đang chờ duyệt:</h4>';
+            data.pending_files.forEach(file => {
+              html += `<li class="pending"><i class="fas fa-hourglass-half"></i> ${file}</li>`;
+            });
+          }
+          
+          if ((!data.files || data.files.length === 0) && (!data.pending_files || data.pending_files.length === 0)) {
+            html = '<p style="text-align: center; color: #6c757d; font-style: italic;"><i class="fas fa-inbox"></i> Chưa có file nào được gửi</p>';
+          }
+          
+          document.getElementById('fileList').innerHTML = html;
+          updateLastUpdateTime();
+        })
+        .catch(error => {
+          console.error('Lỗi khi tải danh sách file:', error);
+        });
+    }
+
+    function checkConnection() {
+      updateStatus('🔄 Đang kiểm tra kết nối...', 'loading');
+      
+      fetch('/check-connection')
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'connected') {
+            updateStatus(`✅ Đã kết nối đến ${data.server_ip}`, 'connected');
+            startAutoRefresh();
+          } else {
+            updateStatus(`❌ Kết nối thất bại: ${data.message || 'Lỗi không xác định'}`, 'disconnected');
+            stopAutoRefresh();
+          }
+        })
+        .catch(error => {
+          updateStatus('❌ Lỗi kiểm tra kết nối: ' + error.message, 'disconnected');
+          stopAutoRefresh();
+        });
+    }
+
+    function disconnect() {
+      updateStatus('🔄 Đang ngắt kết nối...', 'loading');
+      fetch('/disconnect', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            updateStatus('✅ Đã ngắt kết nối', 'disconnected');
+            document.getElementById('fileList').innerHTML = '<p style="text-align: center; color: #6c757d; font-style: italic;"><i class="fas fa-inbox"></i> Chưa có file nào được gửi</p>';
+            stopAutoRefresh();
+            previousFileState = {};
+            isFirstLoad = true;
+            // Gửi tín hiệu cho tab server tự refresh ngay lập tức
+            localStorage.setItem('forceServerRefresh', Date.now());
+          } else {
+            updateStatus('❌ Ngắt kết nối thất bại', 'disconnected');
+          }
+        })
+        .catch(error => {
+          updateStatus('❌ Lỗi ngắt kết nối: ' + error.message, 'disconnected');
+          isFirstLoad = true;
+        });
+    }
+
+    function startAutoRefresh() {
+      if (refreshInterval) {
+        clearInterval(refreshInterval);
+      }
+      loadFiles();
+      refreshInterval = setInterval(loadFiles, 3000);
+    }
+
+    function stopAutoRefresh() {
+      if (refreshInterval) {
+        clearInterval(refreshInterval);
+        refreshInterval = null;
+      }
+    }
+
+    // Key Management Functions
+    function generateKeysManually() {
+      if (!confirm('Bạn có chắc chắn muốn sinh cặp key RSA mới? Key cũ sẽ bị thay thế.')) {
+        return;
+      }
+      
+      fetch('/generate-keys-manually', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            showToast('✅ Đã sinh cặp key RSA mới thành công!', 'success');
+          } else {
+            showToast(`❌ Lỗi: ${data.message}`, 'error');
+          }
+        })
+        .catch(error => {
+          showToast(`❌ Lỗi khi sinh key: ${error.message}`, 'error');
+        });
+    }
+
+    function viewKeyHistory() {
+      const historyDiv = document.getElementById('keyHistory');
+      const contentDiv = document.getElementById('keyHistoryContent');
+      
+      if (historyDiv.style.display === 'none') {
+        // Hiển thị và load lịch sử
+        fetch('/key-history')
+          .then(res => res.json())
+          .then(data => {
+            if (data.status === 'success') {
+              let html = '';
+              if (data.history && data.history.length > 0) {
+                html += `<p style="color: #28a745; margin-bottom: 10px;">
+                  <i class="fas fa-info-circle"></i> Tổng cộng: ${data.total_generations} lần sinh key
+                </p>`;
+                html += '<ul style="list-style: none; padding: 0;">';
+                data.history.forEach((entry, index) => {
+                  html += `<li style="padding: 8px 12px; margin-bottom: 5px; background: #f8f9fa; border-radius: 5px; border-left: 3px solid #17a2b8;">
+                    <i class="fas fa-key"></i> ${entry.trim()}
+                  </li>`;
+                });
+                html += '</ul>';
+              } else {
+                html = '<p style="text-align: center; color: #6c757d; font-style: italic;">Chưa có lịch sử sinh key</p>';
+              }
+              contentDiv.innerHTML = html;
+            } else {
+              contentDiv.innerHTML = `<p style="color: #dc3545;">❌ Lỗi: ${data.message}</p>`;
+            }
+          })
+          .catch(error => {
+            contentDiv.innerHTML = `<p style="color: #dc3545;">❌ Lỗi khi tải lịch sử: ${error.message}</p>`;
+          });
+        
+        historyDiv.style.display = 'block';
+      } else {
+        // Ẩn lịch sử
+        historyDiv.style.display = 'none';
+      }
+    }
+
+    function clearKeyHistory() {
+      if (!confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử sinh key? Hành động này không thể hoàn tác.')) {
+        return;
+      }
+      
+      fetch('/clear-key-history', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            showToast('✅ Đã xóa lịch sử sinh key thành công!', 'success');
+            // Ẩn phần lịch sử nếu đang hiển thị
+            document.getElementById('keyHistory').style.display = 'none';
+          } else {
+            showToast(`❌ Lỗi: ${data.message}`, 'error');
+          }
+        })
+        .catch(error => {
+          showToast(`❌ Lỗi khi xóa lịch sử: ${error.message}`, 'error');
+        });
+    }
+
+    function refreshServerKey() {
+      fetch('/refresh-server-key', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            showToast('✅ Đã refresh server key thành công!', 'success');
+          } else {
+            showToast(`❌ Lỗi: ${data.message}`, 'error');
+          }
+        })
+        .catch(error => {
+          showToast(`❌ Lỗi khi refresh server key: ${error.message}`, 'error');
+        });
+    }
+
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        stopAutoRefresh();
+      } else {
+        fetch('/check-connection')
+          .then(res => res.json())
+          .then(data => {
+            if (data.status === 'connected') {
+              startAutoRefresh();
+            }
+          });
+      }
+    });
+
+    window.addEventListener('load', function() {
+      checkConnection();
+    });
+  </script>
+</body>
+</html>
